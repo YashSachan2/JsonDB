@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <style>
+        .y4{
+            margin-left:50vw;
+        }
+    </style>
+</head>
+<body>
+    <u><h1 class="display-1">STUDENT ENROLLMENT FORM</h1></u>
+    <form class="row m-3">
+        <div class="col-md-6">
+          <label for="inputEmail4" class="form-label">Roll Number</label>
+          <input type="number" class="roll1 form-control" id="roll" onchange="getRoll()">
+        </div>
+        <div class="col-md-6">
+          <label for="inputPassword4" class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="name">
+        </div>
+        <div class="col-12">
+          <label for="inputAddress" class="form-label">Class</label>
+          <input type="number" class="form-control" id="class" placeholder="" max="12" min="0">
+        </div>
+        <div class="col-12">
+          <label for="inputAddress2" class="form-label">Address</label>
+          <input type="text" class="form-control" id="address" placeholder="">
+        </div>
+        <div class="col-md-4">
+          <label for="inputCity" class="form-label">Date Of Birth</label>
+          <input type="date" class="form-control" id="dob">
+        </div>
+        <div class="col-md-4">
+          <label for="inputZip" class="form-label">Enrollment Date</label>
+          <input type="date" class="form-control" id="enroll">
+        </div>
+      </form>
+      <div class="y4">
+      <button type="button" class="btn btn-outline-success" id="save" onclick="saveEmployee()" disabled="true">Save</button>
+      <button type="button" class="btn btn-outline-primary" id="reset" onclick="resetForm()" disabled="true">Reset</button>
+      <button type="button" class="btn btn-outline-info" id="change" onclick="changedata()" disabled="true">Change</button>
+      </div>
+</body>
+<script>
+$("#roll").focus();
+function validateAndGetFormData() {
+var empIdVar = $("#roll").val();
+if (empIdVar === "") {
+alert("Employee ID Required Value");
+$("#empId").focus();
+return "";
+}
+var empNameVar = $("#name").val();
+if (empNameVar === "") {
+alert("Full Name is Required Value");
+$("#name").focus();
+return "";
+}
+var empEmailVar = $("#class").val();
+if (empEmailVar === "") {
+alert("Class is Required Value");
+$("#class").focus();
+return "";
+}
+var empEmailVar1 = $("#address").val();
+if (empEmailVar1 === "") {
+alert("Address is Required Value");
+$("#address").focus();
+return "";
+}
+var empEmailVar2 = $("#dob").val();
+if (empEmailVar2 === "") {
+alert("Class is Required Value");
+$("#dob").focus();
+return "";
+}
+var empEmailVar3 = $("#enroll").val();
+if (empEmailVar3 === "") {
+alert("Class is Required Value");
+$("#enroll").focus();
+return "";
+}
+var jsonStrObj = {
+RollNumber: empIdVar,
+Name: empNameVar,
+Class: empEmailVar,
+Address:empEmailVar1,
+DateOfBirth:empEmailVar2,
+EnrollmentDate:empEmailVar3,
+};
+console.log("Done")
+return JSON.stringify(jsonStrObj);
+}
+function getRoll(){
+  console.log("hello");
+  var rollid=getRollasJsonObj();
+  var getRequest=createGET_BY_KEYRequest("90931327|-31949328601670910|90950484","SCHOOL-DB", "SCHOOL-TABLE",rollid);
+  console.log(getRequest);
+  jQuery.ajaxSetup({async:false})
+  var reson=executeCommandAtGivenBaseUrl(getRequest,
+"http://api.login2explore.com:5577", "/api/irl")
+ console.log("*",reson)
+jQuery.ajaxSetup({async:true})
+if (reson.status===400){
+  $("#save").prop("disabled",false)
+$("#reset").prop("disabled",false)
+$("#roll").focus();
+} else if(reson.status===200){
+  $("#roll").prop("disabled",true);
+   fillData(reson)
+  $("#change").prop("disabled",false)
+$("#reset").prop("disabled",false)
+$("#name").focus();
+}
+}
+function getRollasJsonObj(){
+  var roll=$("#roll").val()
+  var jsonStr={
+    RollNumber:roll,
+  }
+  console.log(jsonStr)
+  return JSON.stringify(jsonStr);
+}
+function saveRoll(reson){
+  var l=JSON.parse(reson.data);
+  localStorage.setItem('recno',l.RollNumber)
+}
+function fillData(reson){
+  saveRoll(reson)
+  var data=JSON.parse(reson.data).record;
+$("#name").val(data.Name);
+$("#class").val(data.Class);
+$("#address").val(data.Address);
+$("#dob").val(data.DateOfBirth);
+$("#enroll").val(data.EnrollmentDate);
+}
+function resetForm() {
+$("#roll").val("")
+$("#name").val("");
+$("#class").val("");
+$("#address").val("");
+$("#dob").val("");
+$("#enroll").val("");
+$("#roll").focus();
+$("#save").prop("disabled",true)
+$("#reset").prop("disabled",true)
+$("#change").prop("disabled",true)
+}
+function saveEmployee() {
+var jsonStr = validateAndGetFormData();
+if (jsonStr === "") {
+return;
+}
+var putReqStr = createPUTRequest("90931327|-31949328601670910|90950484",
+jsonStr, "SCHOOL-DB", "SCHOOL-TABLE");
+alert(putReqStr);
+jQuery.ajaxSetup({async: false});
+var resultObj = executeCommandAtGivenBaseUrl(putReqStr,
+"http://api.login2explore.com:5577", "/api/iml");
+alert(JSON.stringify(resultObj));
+jQuery.ajaxSetup({async: true});
+resetForm();
+$("#roll").focus();
+}
+function changedata(){
+  $("#change").prop("disabled",true);
+  jsonchg=validateAndGetFormData();
+  console.log(jsonchg);
+  console.log(localStorage.getItem("recno"))
+  var updateRequest=createUPDATERecordRequest("90931327|-31949328601670910|90950484",jsonchg,"SCHOOL-DB", "SCHOOL-TABLE",localStorage.getItem("recno"))
+  jQuery.ajaxSetup({async:false})
+  var reson=executeCommandAtGivenBaseUrl(updateRequest,
+"http://api.login2explore.com:5577", "/api/iml")
+jQuery.ajaxSetup({async:true})
+console.log(reson)
+resetForm()
+$("#roll").focus();
+}
+
+</script>
+</html>
