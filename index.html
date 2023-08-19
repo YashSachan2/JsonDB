@@ -117,8 +117,8 @@ $("#roll").focus();
   $("#roll").prop("disabled",true);
    fillData(reson)
   $("#change").prop("disabled",false)
-$("#reset").prop("disabled",false)
-$("#name").focus();
+  $("#reset").prop("disabled",false)
+  $("#name").focus();
 }
 }
 function getRollasJsonObj(){
@@ -131,9 +131,11 @@ function getRollasJsonObj(){
 }
 function saveRoll(reson){
   var l=JSON.parse(reson.data);
-  localStorage.setItem('recno',l.RollNumber)
+  console.log("l",l)
+  localStorage.setItem("rec_no",l.rec_no)
 }
 function fillData(reson){
+  console.log("fillData")
   saveRoll(reson)
   var data=JSON.parse(reson.data).record;
 $("#name").val(data.Name);
@@ -144,6 +146,7 @@ $("#enroll").val(data.EnrollmentDate);
 }
 function resetForm() {
 $("#roll").val("")
+$("#roll").prop("disabled",false);
 $("#name").val("");
 $("#class").val("");
 $("#address").val("");
@@ -173,9 +176,9 @@ $("#roll").focus();
 function changedata(){
   $("#change").prop("disabled",true);
   jsonchg=validateAndGetFormData();
-  console.log(jsonchg);
-  console.log(localStorage.getItem("recno"))
-  var updateRequest=createUPDATERecordRequest("90931327|-31949328601670910|90950484",jsonchg,"SCHOOL-DB", "SCHOOL-TABLE",localStorage.getItem("recno"))
+  console.log("#",jsonchg);
+  console.log(localStorage.getItem("rec_no"))
+  var updateRequest=createUPDATERecordRequest("90931327|-31949328601670910|90950484",jsonchg,"SCHOOL-DB", "SCHOOL-TABLE",localStorage.getItem("rec_no"))
   jQuery.ajaxSetup({async:false})
   var reson=executeCommandAtGivenBaseUrl(updateRequest,
 "http://api.login2explore.com:5577", "/api/iml")
