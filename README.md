@@ -31,13 +31,6 @@ JsonPowerDB is a high-performance, real-time, and developer-friendly data store.
 2. Open the HTML file in a web browser.
 3. Fill out the student details and follow the workflow as described in the project instructions.
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgements
-- [JsonPowerDB](http://login2explore.com/jpdb/)
-- [jQuery](https://jquery.com/)
-
 ---
 
 *Note: This README is a template. Modify it according to your project's specific details.*
