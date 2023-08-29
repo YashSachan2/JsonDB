@@ -32,5 +32,3 @@ JsonPowerDB is a high-performance, real-time, and developer-friendly data store.
 3. Fill out the student details and follow the workflow as described in the project instructions.
 
 ---
-
-*Note: This README is a template. Modify it according to your project's specific details.*
